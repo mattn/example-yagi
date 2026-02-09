@@ -17,3 +17,5 @@ jobs:
           Z_AI_API_KEY: ${{ secrets.Z_AI_API_KEY }}
         with:
           model: zai/glm-4.7-flash
+          app_id: ${{ secrets.YAGI_APP_ID }}
+          app_private_key: ${{ secrets.YAGI_APP_PRIVATE_KEY }}
