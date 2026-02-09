@@ -12,10 +12,27 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.YAGI_APP_ID }}
+          private-key: ${{ secrets.YAGI_APP_PRIVATE_KEY }}
+
+      - name: Debug token
+        run: |
+          if [ -n "$APP_TOKEN" ]; then
+            echo "App token is SET (length: ${#APP_TOKEN})"
+          else
+            echo "App token is EMPTY"
+          fi
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - uses: yagi-agent/actions-yagi@main
         env:
           Z_AI_API_KEY: ${{ secrets.Z_AI_API_KEY }}
         with:
           model: zai/glm-4.7-flash
-          app_id: ${{ secrets.YAGI_APP_ID }}
-          app_private_key: ${{ secrets.YAGI_APP_PRIVATE_KEY }}
+          github_token: ${{ steps.app-token.outputs.token }}
